@@ -1,4 +1,20 @@
-import { utilities } from "./v9/utilities.js";
+let idList = {};
+
+generateId = function(length = 28){
+        const chars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=+_|!@#$%^&*()`;
+        let result = ``;
+        for (let i=0; i<length-4; i++){
+            result+=chars.charAt(Math.floor(Math.random()*chars.length));
+        }
+        if (idList[result]){
+            console.log(`Damn lucky day! `, result);
+            result = generateId(length);
+        }
+        let gen = Math.floor(Math.random()*(result.length+1));
+        result = result.slice(0, gen) + 'gen-' + result.slice(gen);
+        idList[result] = true;
+        return result;
+}
 
 let files = {
     events:{
@@ -24,7 +40,7 @@ export class event{
         return events_array;
     }
     constructor(type, event){
-        this.id = utilities.generateId();
+        this.id = generateId();
         this.type = type;
         this.event = event.bind(this);
         window.addEventListener(this.type,this.event);
